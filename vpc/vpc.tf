@@ -57,16 +57,23 @@ resource "aws_route_table" "public" {
     vpc_id = aws_vpc.main.id
 
     # 라우트테이블 내에 넣는것cidr_block 전체 공개설정으로  인터넷 게이트웨이로 아웃바운드 된다는 의미
-    # inner rule
-    route {
-        cidr_block = "0.0.0.0/0"
-        gateway_id = aws_internet_gateway.igw.id
-    }
+    ## rt-rule-1-method) inner rule 방식으로 적용 한 코드
+    #route {
+    #    cidr_block = "0.0.0.0/0"
+    #    gateway_id = aws_internet_gateway.igw.id
+    #}
 
     tags = {
         Name = "My-RT-Public"
     }
 }
+## rt-rule-2-method) 외부 리소스로 따로 테라폼 코드로 빼는 코드(적용하진 않음)
+resource "aws_route" "public_igw_1" {
+  route_table_id              = aws_route_table.public.id
+  destination_cidr_block      = "0.0.0.0/0"
+  gateway_id     = aws_internet_gateway.igw.id
+}
+
 
 # Private RT 
 resource "aws_route_table" "private" {
@@ -82,6 +89,7 @@ resource "aws_route_table_association" "route_table_public" {
     subnet_id      = aws_subnet.public_subnet.id
     route_table_id = aws_route_table.public.id
 }
+
 
 #resource "aws_route_table_association" "route_table_private" {
 # subnet_id      = aws_subnet.private_subnet.id
