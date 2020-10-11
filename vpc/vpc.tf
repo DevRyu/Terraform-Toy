@@ -55,6 +55,7 @@ resource "aws_internet_gateway" "igw" {
 # Public RT 
 resource "aws_route_table" "public" {
     vpc_id = aws_vpc.main.id
+
     tags = {
         Name = "My-RT-Public"
     }
@@ -63,25 +64,19 @@ resource "aws_route_table" "public" {
 # Private RT 
 resource "aws_route_table" "private" {
     vpc_id = aws_vpc.main.id
+
     tags = {
         Name = "My-RT-Private"
     }
 }
 
 
-#resource "aws_route_table_association" "route_table_public" {
-#    subnet_id      = aws_subnet.public_subnet.id
-#    route_table_id = aws_route_table.route_table.id
-    
-#    tags = {
-#        Name = "My-RT-Public-Association"
-#    }
-#}
+resource "aws_route_table_association" "route_table_public" {
+    subnet_id      = aws_subnet.public_subnet.id
+    route_table_id = aws_route_table.public.id
+}
+
 #resource "aws_route_table_association" "route_table_private" {
 # subnet_id      = aws_subnet.private_subnet.id
-#  route_table_id = aws_route_table.route_table.id
-
-#    tags = {
-#        Name = "My-RT-Private-Association"
-#    }
+#  route_table_id = aws_route_table.private.id
 #}
