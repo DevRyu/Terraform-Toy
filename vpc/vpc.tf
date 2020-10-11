@@ -56,6 +56,13 @@ resource "aws_internet_gateway" "igw" {
 resource "aws_route_table" "public" {
     vpc_id = aws_vpc.main.id
 
+    # 라우트테이블 내에 넣는것cidr_block 전체 공개설정으로  인터넷 게이트웨이로 아웃바운드 된다는 의미
+    # inner rule
+    route {
+        cidr_block = "0.0.0.0/0"
+        gateway_id = aws_internet_gateway.igw.id
+    }
+
     tags = {
         Name = "My-RT-Public"
     }
