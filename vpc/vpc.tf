@@ -68,10 +68,15 @@ resource "aws_route_table" "public" {
     }
 }
 ## rt-rule-2-method) 외부 리소스로 따로 테라폼 코드로 빼는 코드(적용하진 않음)
-resource "aws_route" "public_igw_1" {
-  route_table_id              = aws_route_table.public.id
-  destination_cidr_block      = "0.0.0.0/0"
-  gateway_id     = aws_internet_gateway.igw.id
+#resource "aws_route" "public_igw_1" {
+#  route_table_id              = aws_route_table.public.id
+#  destination_cidr_block      = "0.0.0.0/0"
+#  gateway_id     = aws_internet_gateway.igw.id
+#}
+
+resource "aws_route_table_association" "route_table_public" {
+    subnet_id      = aws_subnet.public_subnet.id
+    route_table_id = aws_route_table.public.id
 }
 
 
@@ -84,14 +89,14 @@ resource "aws_route_table" "private" {
     }
 }
 
-
-resource "aws_route_table_association" "route_table_public" {
-    subnet_id      = aws_subnet.public_subnet.id
-    route_table_id = aws_route_table.public.id
-}
-
+#resource "aws_route" "private_nat_1" {
+#  route_table_id              = aws_route_table.private.id
+#  destination_cidr_block      = "0.0.0.0/0"
+#  nat_gateway_id              = aws_nat_gateway.nat_gateway.id
+#}
 
 #resource "aws_route_table_association" "route_table_private" {
 # subnet_id      = aws_subnet.private_subnet.id
 #  route_table_id = aws_route_table.private.id
 #}
+#
