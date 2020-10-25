@@ -17,3 +17,31 @@ resource "aws_iam_role" "first" {
 }
 EOF
 }
+
+resource "aws_iam_role_policy" "first_s3" {
+  name   = "hello-s3-download"
+  role   = aws_iam_role.first.id
+  policy = <<EOF
+{
+  "Statement": [
+    {
+      "Sid": "AllowAppArtifactsReadAccess",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "*"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+
+}
+
+resource "aws_iam_instance_profile" "first_profile" {
+  name = "first-profile"
+  role = aws_iam_role.first.name
+}
+
